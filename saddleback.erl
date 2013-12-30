@@ -146,7 +146,7 @@ doTests(Fns, ZZ, Acc) ->
 	Result2 = invertDoubleBSearch(Fn, ZZ),
 	NumPairs = length(Result0),
 	Result = ((NumPairs == length(Result1)) and (NumPairs == length(Result2))),
-	Counts = {incrCounter(0) - 1, incrCounter(1) - 1, incrCounter(2) - 1},
+	Counts = {lookupCount(0), lookupCount(1), lookupCount(2)},
 	doTests(TF, ZZ, [{Result, NumPairs, Counts} | Acc]).
 
 
@@ -186,3 +186,7 @@ resetCounter(CounterID) ->
 		_ ->
 			ets:insert(t_counts, #counter_entry{id=CounterID, nextid=0})
 	end.
+
+lookupCount(CounterID) ->
+	[Counter] = ets:lookup(t_counts, CounterID),
+	Counter#counter_entry.nextid.
